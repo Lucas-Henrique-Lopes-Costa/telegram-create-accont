@@ -444,7 +444,7 @@ def check_ban():
 def banner():
     print(bcolors.WARNING+"""
 [+] Telegram Tools
-[+] Producer Lucas
+[+] Producer Lucas Henrique
 """+bcolors.ENDC)
 
 
