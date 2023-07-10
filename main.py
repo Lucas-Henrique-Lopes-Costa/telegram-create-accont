@@ -452,8 +452,9 @@ def menu():
     print(bcolors.OKCYAN+"""\n
 *************************** MENU ********************** ********
 *                                                             *
-* [1] Account Builder [2] Ban Check *
-* [Q|q] Log out [3] Log in accounts *
+* [1] Account Builder 
+* [2] Ban Check
+* [Q/q] Exit
 *                                                             *
 ***************************************************************
 """+bcolors.ENDC)
