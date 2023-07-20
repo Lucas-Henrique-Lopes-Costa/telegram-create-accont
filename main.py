@@ -191,6 +191,17 @@ try:
     from telethon.sync import TelegramClient
     from telethon.errors import rpcerrorlist, SessionPasswordNeededError, PhoneNumberUnoccupiedError
     from configparser import ConfigParser, NoSectionError, NoOptionError
+    from ppadb.client import Client
+    from time import sleep
+
+    adb = Client(host='127.0.0.1', port=5037)
+    devices = adb.devices()
+
+    if len(devices) == 0:
+        print('no device attached')
+        quit()
+
+    device = devices[0]
 except Exception as e:
     input(f"Import error: {e}")
 
@@ -256,7 +267,7 @@ class AccountMaker:
         balance = float(str(get(self.url,
                                 params=self.balance_param).text).split(":")[-1])
         try:
-            self.counter = 60
+            self.counter = 320
             print(self.color.OKGREEN +
                   f"\nBalance : {balance}\n"+self.color.ENDC)
             response = str(
@@ -266,12 +277,32 @@ class AccountMaker:
             print(self.color.OKCYAN +
                   f"Number: {phone} | Number ID: {id}\n" + self.color.ENDC)
             try:
-                client = TelegramClient(
-                    f"sessions/{phone}", self.api_id, self.api_hash)
-                client.connect()
-                send_code = client.send_code_request(phone=phone)
+                # instalar apk de um app no celular
+                print(self.color.OKBLUE+"Instalando Telegram..."+self.color.ENDC)
+                device.install('Telegram.apk')
+
+                device.shell('input swipe 500 1500 500 250')
+                device.shell('input tap 931 1367')
+                sleep(3)
+                
+                print(self.color.OKBLUE+"Iniciando Telegram..."+self.color.ENDC)
+                device.shell('input tap 547 1885')
+                sleep(2)
+
+                print(self.color.OKBLUE+"Aceitando termos..."+self.color.ENDC)
+                device.shell('input tap 877 1480')
+                sleep(2)
+
+                device.shell('input tap 533 1270')
+                sleep(2)
+
+                print(self.color.OKBLUE+"Inserindo número..."+self.color.ENDC)
+                # rodar o tap 15 vezes
+                for i in range(15):
+                    device.shell('input tap 873 2041')
                 self.code_sent(id)
-                return self.get_code(client, id, phone, send_code)
+                # return self.get_code(client, id, phone, send_code)
+                return self.get_code(id, phone)
             except rpcerrorlist.PhoneNumberBannedError:
                 self.cancel_order(phone=phone, id=id, ban=True)
                 return self.create_account()
@@ -294,24 +325,25 @@ class AccountMaker:
                   ('status', '1'), ('id', id))
         get(self.url, params=params)
 
-    def get_code(self, client, id, phone, send_code):
+    def get_code(self, id, phone):
         params = (('api_key', self.token),
                   ('action', 'getStatus'), ('id', id),)
+        print(self.color.OKBLUE+"Aguardando o SMS....."+self.color.ENDC)
+        device.shell(f'input text {phone}')
+        device.shell('input tap 940 1400')
+        device.shell('input tap 870 1486')
+        device.shell('input tap 544 1266')
         while True:
             if self.counter == 0:
                 self.cancel_order(id, phone)
                 return self.create_account()
             response = str(get(self.url, params=params).text)
-            print(self.color.OKBLUE+"Enviado SMS....."+self.color.ENDC)
             if response != "STATUS_WAIT_CODE":
                 try:
                     code = response.split(":")[-1]
                     print(self.color.OKGREEN +
                           f"\nCódigo recebido: {code}\n"+self.color.ENDC)
-                    client.sign_in(phone=phone, code=code)
-                    #client.sign_up(code=code, first_name="Users", phone=phone)
-                    print(client.is_user_authorized())
-                    client.disconnect()
+                    print("Autendicando...")
                     self.save_number(phone)
                     self.finish(id)
                     self.wait()
@@ -327,11 +359,8 @@ class AccountMaker:
                 except PhoneNumberUnoccupiedError:
                     with open("data/names.txt") as f:
                         names = str(f.read()).split("\n")
-                    client.sign_up(phone_code_hash=send_code.phone_code_hash,
-                                   code=code, first_name=choice(names), phone=phone)
-                    print(
-                        self.color.OKGREEN+f"\nSucesso!!!\nNome da conta: {client.get_me().first_name}\n"+self.color.ENDC)
-                    client.disconnect()
+                    # print(self.color.OKGREEN+f"\nSucesso!!!\nNome da conta: {client.get_me().first_name}\n"+self.color.ENDC)
+                    print(self.color.OKGREEN+f"\nSucesso!!!\n"+self.color.ENDC)
                     self.save_number(phone)
                     self.finish(id)
                     self.wait()
