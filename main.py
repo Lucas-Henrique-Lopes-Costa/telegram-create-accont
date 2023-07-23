@@ -267,9 +267,23 @@ class AccountMaker:
         balance = float(str(get(self.url,
                                 params=self.balance_param).text).split(":")[-1])
         try:
-            self.counter = 320
+            self.counter = 60
             print(self.color.OKGREEN +
                   f"\nBalance : {balance}\n"+self.color.ENDC)
+            # instalar apk de um app no celular
+            print(self.color.OKBLUE+"Instalando Telegram..."+self.color.ENDC)
+            device.install('Telegram.apk')
+
+            # Abrir o app
+            print(self.color.OKBLUE+"Abrindo Telegram..."+self.color.ENDC)
+            device.shell('input swipe 500 1500 500 250')
+            device.shell('input tap 930 1370')
+            sleep(3)
+            
+            print(self.color.OKBLUE+"Iniciando Telegram..."+self.color.ENDC)
+            device.shell('input tap 530 2000')
+            sleep(2)
+
             response = str(
                 get(self.url, params=self.buy_param).text).split(":")
             phone = response[2]
@@ -277,29 +291,10 @@ class AccountMaker:
             print(self.color.OKCYAN +
                   f"Number: {phone} | Number ID: {id}\n" + self.color.ENDC)
             try:
-                # instalar apk de um app no celular
-                print(self.color.OKBLUE+"Instalando Telegram..."+self.color.ENDC)
-                device.install('Telegram.apk')
-
-                device.shell('input swipe 500 1500 500 250')
-                device.shell('input tap 931 1367')
-                sleep(3)
-                
-                print(self.color.OKBLUE+"Iniciando Telegram..."+self.color.ENDC)
-                device.shell('input tap 547 1885')
-                sleep(2)
-
-                print(self.color.OKBLUE+"Aceitando termos..."+self.color.ENDC)
-                device.shell('input tap 877 1480')
-                sleep(2)
-
-                device.shell('input tap 533 1270')
-                sleep(2)
-
                 print(self.color.OKBLUE+"Inserindo número..."+self.color.ENDC)
-                # rodar o tap 15 vezes
+                # Apagar campo de texto
                 for i in range(15):
-                    device.shell('input tap 873 2041')
+                    device.shell('input keyevent 67')
                 self.code_sent(id)
                 # return self.get_code(client, id, phone, send_code)
                 return self.get_code(id, phone)
@@ -343,7 +338,49 @@ class AccountMaker:
                     code = response.split(":")[-1]
                     print(self.color.OKGREEN +
                           f"\nCódigo recebido: {code}\n"+self.color.ENDC)
+                    sleep(5)
+                    device.shell('input tap 483 653')
+                    device.shell('input tap 483 653')
+                    device.shell('input tap 483 653')
+                    device.shell('input tap 483 653')
+                    sleep(2)
+                    device.shell(f'input text {code}')
+                    sleep(2)
+                    
                     print("Autendicando...")
+
+                    # Pega um nome aleatório
+                    with open("data/names.txt") as f:
+                        names = str(f.read()).split("\n")
+                    name = choice(names)
+                    device.shell(f'input text {name}')
+
+                    # Clica em continuar
+                    sleep(2)
+                    print("Clicando em continuar...")
+                    device.shell('input tap 950 1340')
+                    sleep(2)
+
+                    # Aceita os termos
+                    print("Aceita os termos...")
+                    device.shell('input tap 870 1695')
+                    sleep(2)
+
+                    # Find Contancts
+                    print("Negando...")
+                    device.shell('input tap 634 1318')
+                    sleep(2)
+
+                    # Salvar .section
+                    print("Salvando Seção...")
+                    client = TelegramClient(f"sessions/{phone}", self.api_id, self.api_has)
+                    client.start()
+
+                    # Sai do app
+                    print("Saindo...")
+                    device.shell('input tap 538 2222')
+                    sleep(2)
+
                     self.save_number(phone)
                     self.finish(id)
                     self.wait()
@@ -359,7 +396,6 @@ class AccountMaker:
                 except PhoneNumberUnoccupiedError:
                     with open("data/names.txt") as f:
                         names = str(f.read()).split("\n")
-                    # print(self.color.OKGREEN+f"\nSucesso!!!\nNome da conta: {client.get_me().first_name}\n"+self.color.ENDC)
                     print(self.color.OKGREEN+f"\nSucesso!!!\n"+self.color.ENDC)
                     self.save_number(phone)
                     self.finish(id)
@@ -378,12 +414,19 @@ class AccountMaker:
         if ban:
             print(self.color.FAIL +
                   '\n[*] Number blocked by telegram, canceling number..'+self.color.ENDC)
+            # Apagando App
+            print(self.color.OKBLUE+"Desinstalando Telegram..."+self.color.ENDC)
+            device.uninstall('org.thunderdog.challegram')
         elif flood:
             print(self.color.FAIL +
                   '\n[*] Number has a waiting time, Number is canceling..'+self.color.ENDC)
+            print(self.color.OKBLUE+"Desinstalando Telegram..."+self.color.ENDC)
+            device.uninstall('org.thunderdog.challegram')
         else:
             print(self.color.FAIL +
                   "\n[*] Failed to get code within specified time, Canceling number.."+self.color.ENDC)
+            print(self.color.OKBLUE+"Desinstalando Telegram..."+self.color.ENDC)
+            device.uninstall('org.thunderdog.challegram')
         if get(self.url, params=params).text == "ACCESS_CANCEL":
             self.wait()
         try:
