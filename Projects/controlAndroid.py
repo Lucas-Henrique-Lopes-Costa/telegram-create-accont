@@ -8,7 +8,7 @@ import clipboard
 
 api_id = 10103155
 api_hash = "13bddab82f9a0f7188686ee7b5558663"
-phone = "+5537988347387"
+phone = input('Digite o número de telefone: ')
 
 phone = phone.replace('+', '')
 
