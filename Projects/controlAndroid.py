@@ -21,41 +21,41 @@ if len(devices) == 0:
 
 device = devices[0]
 
-# Desistanlando Telegram X
-print('Desinstalando Telegram X')
-device.uninstall('org.thunderdog.challegram')
+# # Desistanlando Telegram X
+# print('Desinstalando Telegram X')
+# device.uninstall('org.thunderdog.challegram')
 
-# instalar apk de um app no celular
-device.install('Telegram.apk')
-print('App instalado')
+# # instalar apk de um app no celular
+# device.install('Telegram.apk')
+# print('App instalado')
 
-print('Abrindo app')
-device.shell('input swipe 500 1500 500 250')
-device.shell('input tap 930 1370')
-sleep(2)
+# print('Abrindo app')
+# device.shell('input swipe 500 1500 500 250')
+# device.shell('input tap 930 1370')
+# sleep(2)
 
-device.shell('input tap 530 2000')
-sleep(2)
+# device.shell('input tap 530 2000')
+# sleep(2)
 
-# Apagar campo de texto
-for i in range(15):
-    device.shell('input keyevent 67')
+# # Apagar campo de texto
+# for i in range(15):
+#     device.shell('input keyevent 67')
 
-print('Digitando número')
-device.shell(f'input text {phone}')
-device.shell('input tap 940 1400')
-device.shell('input tap 870 1486')
-device.shell('input tap 544 1266')
+# print('Digitando número')
+# device.shell(f'input text {phone}')
+# device.shell('input tap 940 1400')
+# device.shell('input tap 870 1486')
+# device.shell('input tap 544 1266')
 
-# Inserindo código
-sleep(2)
-device.shell('input tap 483 653')
-device.shell('input tap 483 653')
-sleep(2)
+# # Inserindo código
+# sleep(2)
+# device.shell('input tap 483 653')
+# device.shell('input tap 483 653')
+# sleep(2)
 
-print('Inserindo código')
-code = input('Digite o código: ')
-device.shell(f'input text {code}')
+# print('Inserindo código')
+# code = input('Digite o código: ')
+# device.shell(f'input text {code}')
 
 print("Autendicando...")
 sleep(2)
@@ -70,21 +70,11 @@ async def fill_phone_number():
 def enter_number():
     pyautogui.write(phone)
     pyautogui.press('enter')
-    sleep(3)
 
 # Função para pegar o código recebido no telefone usando ppadb.client
 def get_verification_code():
     print("Obtendo o código de verificação...")
-    sleep(5)
-
-    adb = Client(host='127.0.0.1', port=5037)
-    devices = adb.devices()
-
-    if len(devices) == 0:
-        print('no device attached')
-        quit()
-
-    device = devices[0]
+    sleep(10)
 
     # print("Clica na conversa do telegram.")
     device.shell('input tap 735 408')

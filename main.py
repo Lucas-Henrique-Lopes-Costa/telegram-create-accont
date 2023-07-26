@@ -261,8 +261,7 @@ class AccountMaker:
         self.product = product
         self.api_id = api_id
         self.api_hash = api_hash
-        self.buy_param = (('api_key', self.token), ('action', 'getNumber'), (
-            'service', self.product), ('operator', self.operator), ('country', self.country))
+        self.buy_param = (('api_key', self.token), ('action', 'getNumber'), ('service', self.product), ('operator', self.operator), ('country', self.country))
         self.balance_param = (('api_key', self.token),
                               ('action', 'getBalance'))
         self.url = 'https://sms-activate.ru/stubs/handler_api.php'
@@ -274,9 +273,34 @@ class AccountMaker:
             self.counter = 60
             print(self.color.OKGREEN +
                   f"\nBalance : {balance}\n"+self.color.ENDC)
+            
+            response = str(
+                get(self.url, params=self.buy_param).text).split(":")
+            
+            # Se não retornar, ele muda de pais, e tenta novamente
+            if len(response) >= 3:
+                phone = response[2]
+                id = response[1]
+            else:
+                # fala o nomedo pais que não deu certo, convertendo o número para o nome do pais
+                print(self.color.FAIL +
+                        f"Failed to get number in {list(countrys.keys())[list(countrys.values()).index(str(self.country))]}, changing country..."+self.color.ENDC)
+                self.country = choice(list(countrys.values()))
+                self.create_account()
+
+            print(self.color.OKCYAN +
+                  f"Number: {phone} | Number ID: {id}\n" + self.color.ENDC)
+
+            # Desistanlando Telegram X
+            print('Desinstalando Telegram X')
+            device.uninstall('org.thunderdog.challegram')
+
             # instalar apk de um app no celular
-            print(self.color.OKBLUE+"Instalando Telegram..."+self.color.ENDC)
             device.install('Telegram.apk')
+            print('App instalado')
+
+            # Preparando Ambiete
+            print(self.color.OKBLUE+"Ambiente Preparado..."+self.color.ENDC)
 
             # Abrir o app
             print(self.color.OKBLUE+"Abrindo Telegram..."+self.color.ENDC)
@@ -287,20 +311,13 @@ class AccountMaker:
             print(self.color.OKBLUE+"Iniciando Telegram..."+self.color.ENDC)
             device.shell('input tap 530 2000')
             sleep(2)
-
-            response = str(
-                get(self.url, params=self.buy_param).text).split(":")
-            phone = response[2]
-            id = response[1]
-            print(self.color.OKCYAN +
-                  f"Number: {phone} | Number ID: {id}\n" + self.color.ENDC)
+            
             try:
                 print(self.color.OKBLUE+"Inserindo número..."+self.color.ENDC)
                 # Apagar campo de texto
                 for i in range(15):
                     device.shell('input keyevent 67')
                 self.code_sent(id)
-                # return self.get_code(client, id, phone, send_code)
                 return self.get_code(id, phone)
             except rpcerrorlist.PhoneNumberBannedError:
                 self.cancel_order(phone=phone, id=id, ban=True)
@@ -327,11 +344,15 @@ class AccountMaker:
     def get_code(self, id, phone):
         params = (('api_key', self.token),
                   ('action', 'getStatus'), ('id', id),)
-        print(self.color.OKBLUE+"Aguardando o SMS....."+self.color.ENDC)
+        
+        print(self.color.OKBLUE+"Digitando número..."+self.color.ENDC)
         device.shell(f'input text {phone}')
         device.shell('input tap 940 1400')
         device.shell('input tap 870 1486')
         device.shell('input tap 544 1266')
+
+        print(self.color.OKBLUE+"Aguardando o SMS....."+self.color.ENDC)
+        
         while True:
             if self.counter == 0:
                 self.cancel_order(id, phone)
@@ -342,12 +363,13 @@ class AccountMaker:
                     code = response.split(":")[-1]
                     print(self.color.OKGREEN +
                           f"\nCódigo recebido: {code}\n"+self.color.ENDC)
+                    
                     sleep(5)
                     device.shell('input tap 483 653')
-                    device.shell('input tap 483 653')
-                    device.shell('input tap 483 653')
-                    device.shell('input tap 483 653')
                     sleep(2)
+                    device.shell('input tap 800 1200')
+
+                    print(self.color.OKBLUE+"Inserindo código..."+self.color.ENDC)
                     device.shell(f'input text {code}')
                     sleep(2)
                     
@@ -358,9 +380,9 @@ class AccountMaker:
                         names = str(f.read()).split("\n")
                     name = choice(names)
                     device.shell(f'input text {name}')
+                    sleep(2)
 
                     # Clica em continuar
-                    sleep(2)
                     print("Clicando em continuar...")
                     device.shell('input tap 950 1340')
                     sleep(2)
@@ -380,47 +402,30 @@ class AccountMaker:
 
                     # Função para preencher o número de telefone no Telegram
                     async def fill_phone_number():
-                        client = TelegramClient(f"sessions/{phone}", api_id, api_hash)
+                        client = TelegramClient(f"sessions/{phone}", self.api_id, self.api_has)
                         await client.start()
 
                     # Função para colocar o número de telefone no terminal
                     def enter_number():
                         pyautogui.write(phone)
                         pyautogui.press('enter')
-                        sleep(3)
 
                     # Função para pegar o código recebido no telefone usando ppadb.client
                     def get_verification_code():
                         print("Obtendo o código de verificação...")
-                        sleep(5)
-                        
-                        adb = Client(host='127.0.0.1', port=5037)
-                        devices = adb.devices()
+                        sleep(10)
 
-                        if len(devices) == 0:
-                            print('no device attached')
-                            quit()
-
-                        device = devices[0]
-
-                        # print("Dispositivo conectado.")
-                        # clica na conversa do telegram
+                        # print("Clica na conversa do telegram.")
                         device.shell('input tap 735 408')
-                        # sleep(5)
 
-                        # clica no campo de texto
                         # print("clica no campo de texto")
                         device.shell('input tap 318 1928')
-                        # sleep(5)
 
-                        # clica em copiar
-                        # print("clica em copiar")
+                        # Copiar
                         device.shell('input tap 318 1928')
+                        code_pattern = r"Login code: (\d+)"
 
                         received_message = clipboard.paste()
-                        
-                        # Use regex para encontrar o código na mensagem
-                        code_pattern = r"Login code: (\d+)"
                         match = re.search(code_pattern, received_message)
                         if match:
                             verification_code = match.group(1)
@@ -441,11 +446,6 @@ class AccountMaker:
                     if __name__ == "__main__":
                         loop = asyncio.get_event_loop()
                         loop.run_until_complete(main())
-
-                    # Sai do app
-                    print("Saindo...")
-                    device.shell('input tap 538 2222')
-                    sleep(2)
 
                     self.save_number(phone)
                     self.finish(id)
