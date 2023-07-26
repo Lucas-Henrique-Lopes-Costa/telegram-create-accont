@@ -1,66 +1,16 @@
 from telethon.sync import TelegramClient
-from ppadb.client import Client
 from time import sleep
+from ppadb.client import Client
 import pyautogui
 import asyncio
 import re
 import clipboard
 
+# Credenciais da API do Telegram
 api_id = 10103155
 api_hash = "13bddab82f9a0f7188686ee7b5558663"
-phone = "+5537988347387"
+phone = "5537988347387"
 
-phone = phone.replace('+', '')
-
-adb = Client(host='127.0.0.1', port=5037)
-devices = adb.devices()
-
-if len(devices) == 0:
-    print('no device attached')
-    quit()
-
-device = devices[0]
-
-# Desistanlando Telegram X
-print('Desinstalando Telegram X')
-device.uninstall('org.thunderdog.challegram')
-
-# instalar apk de um app no celular
-device.install('Telegram.apk')
-print('App instalado')
-
-print('Abrindo app')
-device.shell('input swipe 500 1500 500 250')
-device.shell('input tap 930 1370')
-sleep(2)
-
-device.shell('input tap 530 2000')
-sleep(2)
-
-# Apagar campo de texto
-for i in range(15):
-    device.shell('input keyevent 67')
-
-print('Digitando número')
-device.shell(f'input text {phone}')
-device.shell('input tap 940 1400')
-device.shell('input tap 870 1486')
-device.shell('input tap 544 1266')
-
-# Inserindo código
-sleep(2)
-device.shell('input tap 483 653')
-device.shell('input tap 483 653')
-sleep(2)
-
-print('Inserindo código')
-code = input('Digite o código: ')
-device.shell(f'input text {code}')
-
-print("Autendicando...")
-sleep(2)
-
-print("Salvando Seção...")
 # Função para preencher o número de telefone no Telegram
 async def fill_phone_number():
     client = TelegramClient(f"sessions/{phone}", api_id, api_hash)
@@ -76,7 +26,7 @@ def enter_number():
 def get_verification_code():
     print("Obtendo o código de verificação...")
     sleep(5)
-
+    
     adb = Client(host='127.0.0.1', port=5037)
     devices = adb.devices()
 
@@ -86,35 +36,29 @@ def get_verification_code():
 
     device = devices[0]
 
-    # print("Clica na conversa do telegram.")
+    # print("Dispositivo conectado.")
+    # clica na conversa do telegram
     device.shell('input tap 735 408')
-    
     # sleep(5)
 
+    # clica no campo de texto
     # print("clica no campo de texto")
     device.shell('input tap 318 1928')
-    
     # sleep(5)
 
-    # Copiar
-
-    # Portugues
-    # device.shell('input tap 240 1758')
-    # code_pattern = r"Código de login: (\d+)"
-    
-    # Ingles
+    # clica em copiar
+    # print("clica em copiar")
     device.shell('input tap 318 1928')
-    code_pattern = r"Login code: (\d+)"
-    
-    #sleep(5)
 
     received_message = clipboard.paste()
+    
+    # Use regex para encontrar o código na mensagem
+    code_pattern = r"Login code: (\d+)"
     match = re.search(code_pattern, received_message)
     if match:
-        verification_code = match.group(1)
-        pyautogui.write(verification_code)
-        pyautogui.press('enter')
-        # print('Código inserido')
+      verification_code = match.group(1)
+      pyautogui.write(verification_code)
+      pyautogui.press('enter')
 
 async def main():
     # Crie as tarefas assíncronas
