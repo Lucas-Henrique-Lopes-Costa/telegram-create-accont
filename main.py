@@ -182,21 +182,20 @@ countrys = {
 }
 
 try:
+    from telethon.errors import rpcerrorlist, SessionPasswordNeededError, PhoneNumberUnoccupiedError
+    from configparser import ConfigParser, NoSectionError, NoOptionError
+    from json import load, loads, dump, decoder
+    from telethon.sync import TelegramClient
+    from ppadb.client import Client
+    from os import system, remove
     from random import choice
     from requests import get
     from time import sleep
-    from json import load, loads, dump, decoder
-    from os import system, remove
     from sys import exit
-    from telethon.sync import TelegramClient
-    from telethon.errors import rpcerrorlist, SessionPasswordNeededError, PhoneNumberUnoccupiedError
-    from configparser import ConfigParser, NoSectionError, NoOptionError
-    from ppadb.client import Client
-    from time import sleep
+    import clipboard
     import pyautogui
     import asyncio
     import re
-    import clipboard
 
     adb = Client(host='127.0.0.1', port=5037)
     devices = adb.devices()
@@ -274,6 +273,8 @@ class AccountMaker:
             print(self.color.OKGREEN +
                   f"\nBalance : {balance}\n"+self.color.ENDC)
             
+            print(self.color.OKCYAN +
+                    f"Country: {list(countrys.keys())[list(countrys.values()).index(str(self.country))]}"+self.color.ENDC)
             response = str(
                 get(self.url, params=self.buy_param).text).split(":")
             
