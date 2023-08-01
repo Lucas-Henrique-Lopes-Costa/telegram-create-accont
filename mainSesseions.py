@@ -31,6 +31,7 @@ device.install('Telegram.apk')
 print('App instalado')
 
 print('Abrindo app')
+device.shell('input swipe 500 1500 500 250')
 device.shell('input tap 930 1370')
 sleep(2)
 
