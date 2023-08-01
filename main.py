@@ -398,6 +398,142 @@ class AccountMaker:
                     device.shell('input tap 634 1318')
                     sleep(2)
 
+                    # Set photo
+                    print("Select photo...")
+
+                    # Escolhe uma foto aleatória da pasta fotos
+                    with open("data/photos.txt") as f:
+                        photos = str(f.read()).split("\n")
+                    photo = choice(photos)
+                    print(photo)
+                    device.push(f"photos/{photo}", f"/sdcard/Pictures/{photo}")
+                    print("Foto enviada!")
+
+                    # Mover para a galeria
+                    print("Open gallery")
+                    device.shell('input tap 520 2200')
+                    device.shell('input tap 130 1500')
+                    sleep(4)
+
+                    # dar acesso a galeria
+                    print("Give access to gallery")
+                    # permissão de contatos
+                    device.shell('pm grant org.thunderdog.challegram android.permission.READ_CONTACTS')
+                    device.shell('pm grant org.thunderdog.challegram android.permission.READ_EXTERNAL_STORAGE')
+
+                    print("Open folder root")
+                    device.shell('input tap 95 250')
+                    sleep(2)
+                    device.shell('input tap 290 1350')
+
+                    print("Open Folder")
+                    device.shell('input tap 140 540')
+                    sleep(2)
+
+                    print("Open photo")
+                    device.shell('input keyevent 62')
+                    device.shell('input keyevent 66')
+
+                    print("Move to gallery")
+                    device.shell('input tap 286 2035')
+                    sleep(2)
+                    device.shell('input tap 140 690')
+                    sleep(2)
+                    device.shell('input tap 400 1270')
+                    sleep(3)
+                    device.shell('input tap 530 2080')
+                    sleep(4)
+                    device.shell('input tap 600 1580')
+                    sleep(2)
+
+                    device.shell('input tap 995 70')
+                    sleep(2)
+                    device.shell('input tap 995 70')
+                    sleep(2)
+                    device.shell('input tap 60 60')
+                    sleep(2)
+                    device.shell('input tap 55 240')
+
+                    print("Set accont...")
+                    device.shell('input tap 66 240')
+                    sleep(2)
+                    device.shell('input tap 270 940')
+
+                    print("Set photo...")
+                    device.shell('input tap 470 588')
+                    sleep(2)
+                    device.shell('input tap 250 1900')
+                    sleep(2)
+                    device.shell('input tap 500 580')
+                    sleep(2)
+                    device.shell('input tap 180 630')
+                    sleep(2)
+
+                    # Set username
+                    print("Set username...")
+                    device.shell('input tap 500 970')
+                    sleep(1)
+                    device.shell('input tap 480 1780')
+                    sleep(1)
+
+                    # Gera um username aleatório com o nome e outros 10 números aleatórios
+                    print("Select user...")
+                    with open("data/names.txt") as f:
+                        names = str(f.read()).split("\n")
+                    name = choice(names)
+                    username = name + ''.join(choice('0123456789') for i in range(10))
+
+                    device.shell(f'input text {username}')
+
+                    # Clica em continuar
+                    device.shell('input tap 950 1340')
+
+                    # Set bio
+                    print("Set bio...")
+                    device.shell('input tap 480 1380')
+                    sleep(2)
+                    device.shell('input tap 480 1780')
+                    sleep(2)
+
+                    bio = "Eu estou usando o Telegram"
+                    device.shell(f'input text {bio}')
+                    sleep(3)
+
+                    # Clica em continuar
+                    device.shell('input tap 950 1340')
+
+                    # Set two-step verification
+                    print("Set two-step verification...")
+                    device.shell('input tap 500 2050')
+                    sleep(2)
+                    device.shell('input tap 500 980')
+                    sleep(2)
+                    device.shell('input tap 500 1564')
+                    sleep(2)
+
+                    device.shell(f'input text arvore11')
+                    sleep(2)
+
+                    # Clica em continuar
+                    device.shell('input tap 950 1340')
+                    sleep(1)
+
+                    # Skip
+                    device.shell('input tap 78 1340')
+                    sleep(1)
+
+                    device.shell('input keyevent 62')
+                    device.shell('input keyevent 22')
+                    device.shell('input keyevent 66')
+
+                    print("Voltando para o telegram...")
+                    device.shell('input tap 75 250')
+                    sleep(1)
+                    device.shell('input tap 75 250')
+                    sleep(1)
+                    device.shell('input tap 75 250')
+                    sleep(1)
+
                     # Salvar .section
                     print("Salvando Seção...")
 

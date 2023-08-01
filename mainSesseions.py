@@ -179,8 +179,7 @@ sleep(2)
 device.shell('input tap 480 1780')
 sleep(2)
 
-bio = "Eu estou usando o Telegram"
-device.shell(f'input text {bio}')
+device.shell(f'input text Telegram')
 sleep(3)
 
 # Clica em continuar
