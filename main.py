@@ -398,6 +398,56 @@ class AccountMaker:
                     device.shell('input tap 634 1318')
                     sleep(2)
 
+                    # Salvar .section
+                    print("Salvando Seção...")
+
+                    # Função para preencher o número de telefone no Telegram
+                    async def fill_phone_number():
+                        client = TelegramClient(f"sessions/{phone}", self.api_id, self.api_has)
+                        await client.start()
+
+                    # Função para colocar o número de telefone no terminal
+                    def enter_number():
+                        pyautogui.write(phone)
+                        pyautogui.press('enter')
+
+                    # Função para pegar o código recebido no telefone usando ppadb.client
+                    def get_verification_code():
+                        print("Obtendo o código de verificação...")
+                        sleep(10)
+
+                        # print("Clica na conversa do telegram.")
+                        device.shell('input tap 735 408')
+
+                        # print("clica no campo de texto")
+                        device.shell('input tap 318 1928')
+
+                        # Copiar
+                        device.shell('input tap 318 1928')
+                        code_pattern = r"Login code: (\d+)"
+
+                        received_message = clipboard.paste()
+                        match = re.search(code_pattern, received_message)
+                        if match:
+                            verification_code = match.group(1)
+                            pyautogui.write(verification_code)
+                            pyautogui.press('enter')
+
+                    async def main():
+                        # Crie as tarefas assíncronas
+                        fill_task = asyncio.ensure_future(fill_phone_number())
+                        enter_task = asyncio.ensure_future(loop.run_in_executor(None, enter_number))
+                        get_task = asyncio.ensure_future(loop.run_in_executor(None, get_verification_code))
+
+                        # Aguarde até que ambas as tarefas sejam concluídas
+                        await asyncio.gather(fill_task, enter_task, get_task)
+
+                        print("Processos concluídos.")
+
+                    if __name__ == "__main__":
+                        loop = asyncio.get_event_loop()
+                        loop.run_until_complete(main())
+
                     # Set photo
                     print("Select photo...")
 
@@ -495,8 +545,7 @@ class AccountMaker:
                     device.shell('input tap 480 1780')
                     sleep(2)
 
-                    bio = "Eu estou usando o Telegram"
-                    device.shell(f'input text {bio}')
+                    device.shell(f'input text Telegram')
                     sleep(3)
 
                     # Clica em continuar
@@ -533,56 +582,6 @@ class AccountMaker:
                     sleep(1)
                     device.shell('input tap 75 250')
                     sleep(1)
-
-                    # Salvar .section
-                    print("Salvando Seção...")
-
-                    # Função para preencher o número de telefone no Telegram
-                    async def fill_phone_number():
-                        client = TelegramClient(f"sessions/{phone}", self.api_id, self.api_has)
-                        await client.start()
-
-                    # Função para colocar o número de telefone no terminal
-                    def enter_number():
-                        pyautogui.write(phone)
-                        pyautogui.press('enter')
-
-                    # Função para pegar o código recebido no telefone usando ppadb.client
-                    def get_verification_code():
-                        print("Obtendo o código de verificação...")
-                        sleep(10)
-
-                        # print("Clica na conversa do telegram.")
-                        device.shell('input tap 735 408')
-
-                        # print("clica no campo de texto")
-                        device.shell('input tap 318 1928')
-
-                        # Copiar
-                        device.shell('input tap 318 1928')
-                        code_pattern = r"Login code: (\d+)"
-
-                        received_message = clipboard.paste()
-                        match = re.search(code_pattern, received_message)
-                        if match:
-                            verification_code = match.group(1)
-                            pyautogui.write(verification_code)
-                            pyautogui.press('enter')
-
-                    async def main():
-                        # Crie as tarefas assíncronas
-                        fill_task = asyncio.ensure_future(fill_phone_number())
-                        enter_task = asyncio.ensure_future(loop.run_in_executor(None, enter_number))
-                        get_task = asyncio.ensure_future(loop.run_in_executor(None, get_verification_code))
-
-                        # Aguarde até que ambas as tarefas sejam concluídas
-                        await asyncio.gather(fill_task, enter_task, get_task)
-
-                        print("Processos concluídos.")
-
-                    if __name__ == "__main__":
-                        loop = asyncio.get_event_loop()
-                        loop.run_until_complete(main())
 
                     self.save_number(phone)
                     self.finish(id)
