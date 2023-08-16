@@ -194,6 +194,7 @@ try:
     from sys import exit
     import clipboard
     import pyautogui
+    import requests
     import asyncio
     import re
 
@@ -207,7 +208,6 @@ try:
     device = devices[0]
 except Exception as e:
     input(f"Import error: {e}")
-
 
 # CONFIG
 try:
@@ -224,7 +224,11 @@ try:
     c_api_id = config.get('telegram', 'api_id')
     c_ap_hash = config.get('telegram', 'api_hash')
 
-    # CONFIG
+    # Set the proxy url
+    proxy_url = 'geo.iproyal.com'
+    port = '32325'
+    user = 'leiroz7'
+    password = 'arvore11_country-ro'
 except NoSectionError as e:
     input(
         f'Error!!, in config file \
@@ -233,10 +237,6 @@ except NoOptionError as e:
     input(
         f'Error!!, in config file \
              {str(e).strip("No section: ")} section not found')
-
-
-
-
 
 
 class bcolors:
@@ -260,32 +260,33 @@ class AccountMaker:
         self.product = product
         self.api_id = api_id
         self.api_hash = api_hash
-        self.buy_param = (('api_key', self.token), ('action', 'getNumber'), ('service', self.product), ('operator', self.operator), ('country', self.country))
+        self.buy_param = (('api_key', self.token), ('action', 'getNumber'), (
+            'service', self.product), ('operator', self.operator), ('country', self.country))
         self.balance_param = (('api_key', self.token),
                               ('action', 'getBalance'))
         self.url = 'https://sms-activate.ru/stubs/handler_api.php'
 
     def create_account(self):
-        balance = float(str(get(self.url,
-                                params=self.balance_param).text).split(":")[-1])
+        balance = float(
+            str(get(self.url, params=self.balance_param).text).split(":")[-1])
         try:
             self.counter = 60
             print(self.color.OKGREEN +
                   f"\nBalance : {balance}\n"+self.color.ENDC)
-            
+
             print(self.color.OKCYAN +
-                    f"Country: {list(countrys.keys())[list(countrys.values()).index(str(self.country))]}"+self.color.ENDC)
+                  f"Country: {list(countrys.keys())[list(countrys.values()).index(str(self.country))]}"+self.color.ENDC)
             response = str(
                 get(self.url, params=self.buy_param).text).split(":")
-            
+
             # Se não retornar, ele muda de pais, e tenta novamente
             if len(response) >= 3:
                 phone = response[2]
                 id = response[1]
             else:
                 # fala o nomedo pais que não deu certo, convertendo o número para o nome do pais
-                print(self.color.FAIL +
-                        f"Failed to get number in {list(countrys.keys())[list(countrys.values()).index(str(self.country))]}, changing country..."+self.color.ENDC)
+                print(
+                    self.color.FAIL + f"Failed to get number in {list(countrys.keys())[list(countrys.values()).index(str(self.country))]}, changing country..."+self.color.ENDC)
                 self.country = choice(list(countrys.values()))
                 self.create_account()
 
@@ -308,16 +309,18 @@ class AccountMaker:
             device.shell('input swipe 500 1500 500 250')
             device.shell('input tap 930 1370')
             sleep(3)
-            
+
             print(self.color.OKBLUE+"Iniciando Telegram..."+self.color.ENDC)
             device.shell('input tap 530 2000')
             sleep(2)
-            
+
             try:
                 print(self.color.OKBLUE+"Inserindo número..."+self.color.ENDC)
+
                 # Apagar campo de texto
                 for i in range(15):
                     device.shell('input keyevent 67')
+
                 self.code_sent(id)
                 return self.get_code(id, phone)
             except rpcerrorlist.PhoneNumberBannedError:
@@ -345,7 +348,7 @@ class AccountMaker:
     def get_code(self, id, phone):
         params = (('api_key', self.token),
                   ('action', 'getStatus'), ('id', id),)
-        
+
         print(self.color.OKBLUE+"Digitando número..."+self.color.ENDC)
         device.shell(f'input text {phone}')
         device.shell('input tap 940 1400')
@@ -353,7 +356,7 @@ class AccountMaker:
         device.shell('input tap 544 1266')
 
         print(self.color.OKBLUE+"Aguardando o SMS....."+self.color.ENDC)
-        
+
         while True:
             if self.counter == 0:
                 self.cancel_order(id, phone)
@@ -364,7 +367,7 @@ class AccountMaker:
                     code = response.split(":")[-1]
                     print(self.color.OKGREEN +
                           f"\nCódigo recebido: {code}\n"+self.color.ENDC)
-                    
+
                     sleep(5)
                     device.shell('input tap 483 653')
                     sleep(2)
@@ -373,7 +376,7 @@ class AccountMaker:
                     print(self.color.OKBLUE+"Inserindo código..."+self.color.ENDC)
                     device.shell(f'input text {code}')
                     sleep(2)
-                    
+
                     print("Autendicando...")
 
                     # Pega um nome aleatório
@@ -403,7 +406,8 @@ class AccountMaker:
 
                     # Função para preencher o número de telefone no Telegram
                     async def fill_phone_number():
-                        client = TelegramClient(f"sessions/{phone}", self.api_id, self.api_has)
+                        client = TelegramClient(
+                            f"sessions/{phone}", self.api_id, self.api_has)
                         await client.start()
 
                     # Função para colocar o número de telefone no terminal
@@ -436,8 +440,10 @@ class AccountMaker:
                     async def main():
                         # Crie as tarefas assíncronas
                         fill_task = asyncio.ensure_future(fill_phone_number())
-                        enter_task = asyncio.ensure_future(loop.run_in_executor(None, enter_number))
-                        get_task = asyncio.ensure_future(loop.run_in_executor(None, get_verification_code))
+                        enter_task = asyncio.ensure_future(
+                            loop.run_in_executor(None, enter_number))
+                        get_task = asyncio.ensure_future(
+                            loop.run_in_executor(None, get_verification_code))
 
                         # Aguarde até que ambas as tarefas sejam concluídas
                         await asyncio.gather(fill_task, enter_task, get_task)
@@ -468,8 +474,10 @@ class AccountMaker:
                     # dar acesso a galeria
                     print("Give access to gallery")
                     # permissão de contatos
-                    device.shell('pm grant org.thunderdog.challegram android.permission.READ_CONTACTS')
-                    device.shell('pm grant org.thunderdog.challegram android.permission.READ_EXTERNAL_STORAGE')
+                    device.shell(
+                        'pm grant org.thunderdog.challegram android.permission.READ_CONTACTS')
+                    device.shell(
+                        'pm grant org.thunderdog.challegram android.permission.READ_EXTERNAL_STORAGE')
 
                     print("Open folder root")
                     device.shell('input tap 95 250')
@@ -531,7 +539,8 @@ class AccountMaker:
                     with open("data/names.txt") as f:
                         names = str(f.read()).split("\n")
                     name = choice(names)
-                    username = name + ''.join(choice('0123456789') for i in range(10))
+                    username = name + ''.join(choice('0123456789')
+                                              for i in range(10))
 
                     device.shell(f'input text {username}')
 
@@ -655,66 +664,6 @@ class AccountMaker:
         sleep(10)
 
 
-def login_accounts():
-    with open("data/phones.json", "r") as f:
-        data = load(f)
-    phone_data = data["phone_numbers"]
-    for id, number in enumerate(phone_data):
-        print(f"[{id}] {number}")
-    id = input("Please enter the number of the account you want to login:> ")
-    if not id:
-        print("You have not made a selection, you are being redirected to the menu!")
-        return menu()
-    selected_number = phone_data[int(id)]
-    print(f"The number you selected: [{selected_number}]\n")
-    print(f"Attempting to login, please wait.")
-    client = TelegramClient("sessions/"+selected_number, c_api_id, c_ap_hash)
-    client.connect()
-    if client.is_user_authorized():
-        input("Account created please request code to login and press enter (only when requesting code)")
-        print("Waiting for code...")
-        while True:
-            try:
-                message = client.get_messages(777000, limit=1)
-                code = message[0].message.split(":")[1].split(".")[0]
-                print("Code received!!!!")
-                print(f"Kod:{code}")
-                client.disconnect()
-                break
-            except IndexError:
-                continue
-
-
-
-
-
-
-
-def check_ban():
-    list = []
-    with open("data/phones.json", "r") as f:
-        d = load(f)
-    for i in d['phone_numbers']:
-        client = TelegramClient(f"sessions/{i}.session", c_api_id, c_ap_hash)
-        client.connect()
-        if not client.is_user_authorized():
-            try:
-                client.send_code_request(i)
-            except rpcerrorlist.PhoneNumberBannedError:
-                print(bcolors.FAIL+f"{i}: Banned"+bcolors.ENDC)
-                client.disconnect()
-                remove(f"sessions/{i}.session")
-        else:
-            print(bcolors.OKGREEN+f"{i}: Active"+bcolors.ENDC)
-            list.append(i)
-            client.disconnect()
-    d['phone_numbers'] = list
-    with open("data/phones.json", "w") as l:
-        dump(d, l)
-    input(bcolors.OKCYAN+"\nNumber List updated, banned numbers and session files deleted\n"+bcolors.ENDC)
-    return main()
-
-
 def banner():
     print(bcolors.WARNING+"""
 [+] Telegram Tools
@@ -744,8 +693,6 @@ def main():
             system("cls")
             banner()
             maker.create_account()
-        elif str(op) =="2":
-            check_ban()
         elif str(op).lower() == "q":
             exit()
         else:
