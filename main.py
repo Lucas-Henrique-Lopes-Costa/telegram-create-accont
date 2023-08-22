@@ -458,62 +458,6 @@ class AccountMaker:
                     device.shell('input tap 634 1318')
                     sleep(2)
 
-                    # Salvar .section
-                    print("Salvando Seção...")
-
-                    # Função para preencher o número de telefone no Telegram
-                    async def fill_phone_number():
-                        client = TelegramClient(
-                            f"sessions/{phone}", self.api_id, self.api_has, proxies=dict(http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
-                        await client.start()
-
-                    # Função para colocar o número de telefone no terminal
-                    def enter_number():
-                        pyautogui.write(phone)
-                        pyautogui.press('enter')
-
-                    # Função para pegar o código recebido no telefone usando ppadb.client
-                    def get_verification_code():
-                        print("Obtendo o código de verificação...")
-                        sleep(10)
-
-                        # print("Clica na conversa do telegram.")
-                        device.shell('input tap 735 408')
-
-                        # print("clica no campo de texto")
-                        device.shell('input tap 318 1928')
-
-                        # Copiar
-                        device.shell('input tap 318 1928')
-                        code_pattern = r"Login code: (\d+)"
-
-                        received_message = clipboard.paste()
-                        match = re.search(code_pattern, received_message)
-                        if match:
-                            verification_code = match.group(1)
-                            pyautogui.write(verification_code)
-                            pyautogui.press('enter')
-
-                    async def main():
-                        # Crie as tarefas assíncronas
-                        fill_task = asyncio.ensure_future(fill_phone_number())
-                        enter_task = asyncio.ensure_future(
-                            loop.run_in_executor(None, enter_number))
-                        get_task = asyncio.ensure_future(
-                            loop.run_in_executor(None, get_verification_code))
-
-                        # Aguarde até que ambas as tarefas sejam concluídas
-                        await asyncio.gather(fill_task, enter_task, get_task)
-
-                        print("Processos concluídos.")
-
-                    if __name__ == "__main__":
-                        loop = asyncio.get_event_loop()
-                        loop.run_until_complete(main())
-
-                    # Set photo
-                    print("Select photo...")
-
                     # Escolhe uma foto aleatória da pasta fotos
                     with open("data/photos.txt") as f:
                         photos = str(f.read()).split("\n")
@@ -530,11 +474,22 @@ class AccountMaker:
 
                     # dar acesso a galeria
                     print("Give access to gallery")
-                    # permissão de contatos
                     device.shell(
                         'pm grant org.thunderdog.challegram android.permission.READ_CONTACTS')
                     device.shell(
                         'pm grant org.thunderdog.challegram android.permission.READ_EXTERNAL_STORAGE')
+                    device.shell(
+                        'pm grant org.thunderdog.challegram android.permission.WRITE_EXTERNAL_STORAGE')
+                    device.shell(
+                        'pm grant org.thunderdog.challegram android.permission.CAMERA')
+                    device.shell(
+                        'pm grant org.thunderdog.challegram android.permission.RECORD_AUDIO')
+                    device.shell(
+                        'pm grant org.thunderdog.challegram android.permission.ACCESS_FINE_LOCATION')
+                    device.shell(
+                        'pm grant org.thunderdog.challegram android.permission.ACCESS_COARSE_LOCATION')
+                    device.shell(
+                        'pm grant org.thunderdog.challegram android.permission.ACCESS_BACKGROUND_LOCATION')
 
                     print("Open folder root")
                     device.shell('input tap 95 250')
@@ -596,8 +551,8 @@ class AccountMaker:
                     with open("data/names.txt") as f:
                         names = str(f.read()).split("\n")
                     name = choice(names)
-                    username = name + ''.join(choice('0123456789')
-                                              for i in range(10))
+                    username = name + ''.join5511918649652
+                    (choice('0123456789') for i in range(10))
 
                     device.shell(f'input text {username}')
 
@@ -611,7 +566,8 @@ class AccountMaker:
                     device.shell('input tap 480 1780')
                     sleep(2)
 
-                    device.shell(f'input text Telegram')
+                    bio = "Eu estou usando o Telegram"
+                    device.shell(f'input text {bio}')
                     sleep(3)
 
                     # Clica em continuar
@@ -648,6 +604,80 @@ class AccountMaker:
                     sleep(1)
                     device.shell('input tap 75 250')
                     sleep(1)
+
+                    # Salvar .section
+                    print("Salvando Seção...")
+
+                    # Limpar o telegram da memória para salvar
+                    device.shell('input tap 535 2200')
+                    device.shell('input tap 835 2200')
+                    device.shell('input swipe 500 1500 500 250')
+
+                    # Abrindo novamente
+                    device.shell('input swipe 500 1500 500 250')
+                    device.shell('input tap 930 1370')
+
+                    sleep(4)
+
+                    async def fill_phone_number():  # Função para preencher o número de telefone no Telegram no terminal e salvar a seção
+                        client = TelegramClient(f'sessions/{phone}', api_id, api_hash,
+                                                proxy=("socks5", proxy_url, port, True, user, password))
+                        await client.start()
+
+                    def enter_number():  # Função para colocar o número de telefone no terminal
+                        pyautogui.write(phone)
+                        pyautogui.press('enter')
+
+                    def get_verification_code():  # Função para pegar o código recebido no telefone usando ppadb.client
+                        print("Obtendo o código de verificação...")
+                        sleep(10)
+
+                        # print("Clica na conversa do telegram.")
+                        device.shell('input tap 735 408')
+
+                        # sleep(5)
+
+                        # print("clica no campo de texto")
+                        device.shell('input tap 318 1928')
+
+                        # sleep(5)
+
+                        # print("Indentifica o código da mensagem.")
+                        device.shell('input tap 318 1928')
+                        code_pattern = r"Login code: (\d+)"
+
+                        # sleep(5)
+
+                        received_message = clipboard.paste()
+                        match = re.search(code_pattern, received_message)
+                        if match:
+                            verification_code = match.group(1)
+                            pyautogui.write(verification_code)
+                            pyautogui.press('enter')
+
+                    async def main():
+                        # Crie as tarefas assíncronas
+                        fill_task = asyncio.ensure_future(fill_phone_number())
+                        enter_task = asyncio.ensure_future(
+                            loop.run_in_executor(None, enter_number))
+                        get_task = asyncio.ensure_future(
+                            loop.run_in_executor(None, get_verification_code))
+
+                        # Aguarde até que ambas as tarefas sejam concluídas
+                        await asyncio.gather(fill_task, enter_task, get_task)
+
+                        # adiciona na lista de phones.json
+                        with open("data/phones.json", "r") as f:
+                            data = load(f)
+                        data['phone_numbers'].append(phone)
+                        with open("data/phones.json", "r+") as f:
+                            dump(data, f)
+
+                        print("Processos concluídos.")
+
+                    if __name__ == "__main__":
+                        loop = asyncio.get_event_loop()
+                        loop.run_until_complete(main())
 
                     self.save_number(phone)
                     self.finish(id)
