@@ -620,7 +620,7 @@ class AccountMaker:
                     sleep(4)
 
                     async def fill_phone_number():  # Função para preencher o número de telefone no Telegram no terminal e salvar a seção
-                        client = TelegramClient(f'sessions/{phone}', api_id, api_hash,
+                        client = TelegramClient(f'sessions/{phone}', self.api_id, self.api_hash,
                                                 proxy=("socks5", proxy_url, port, True, user, password))
                         await client.start()
 
