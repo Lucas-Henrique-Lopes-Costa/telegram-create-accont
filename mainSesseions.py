@@ -10,6 +10,7 @@ import re
 
 api_id = 10103155
 api_hash = "13bddab82f9a0f7188686ee7b5558663"
+
 phone = input('Digite o número de telefone: ')
 phone = phone.replace('+', '')
 
@@ -28,9 +29,6 @@ if len(devices) == 0:
 
 device = devices[0]
 
-# Set photo
-print("Select photo...")
-
 # Escolhe uma foto aleatória da pasta fotos
 with open("data/photos.txt") as f:
     photos = str(f.read()).split("\n")
@@ -47,11 +45,22 @@ sleep(4)
 
 # dar acesso a galeria
 print("Give access to gallery")
-# permissão de contatos
 device.shell(
     'pm grant org.thunderdog.challegram android.permission.READ_CONTACTS')
 device.shell(
     'pm grant org.thunderdog.challegram android.permission.READ_EXTERNAL_STORAGE')
+device.shell(
+    'pm grant org.thunderdog.challegram android.permission.WRITE_EXTERNAL_STORAGE')
+device.shell(
+    'pm grant org.thunderdog.challegram android.permission.CAMERA')
+device.shell(
+    'pm grant org.thunderdog.challegram android.permission.RECORD_AUDIO')
+device.shell(
+    'pm grant org.thunderdog.challegram android.permission.ACCESS_FINE_LOCATION')
+device.shell(
+    'pm grant org.thunderdog.challegram android.permission.ACCESS_COARSE_LOCATION')
+device.shell(
+    'pm grant org.thunderdog.challegram android.permission.ACCESS_BACKGROUND_LOCATION')
 
 print("Open folder root")
 device.shell('input tap 95 250')
@@ -113,7 +122,8 @@ print("Select user...")
 with open("data/names.txt") as f:
     names = str(f.read()).split("\n")
 name = choice(names)
-username = name + ''.join(choice('0123456789') for i in range(10))
+username = name + ''.join5511918649652
+(choice('0123456789') for i in range(10))
 
 device.shell(f'input text {username}')
 
@@ -169,6 +179,16 @@ sleep(1)
 # Salvar .section
 print("Salvando Seção...")
 
+# Limpar o telegram da memória para salvar
+device.shell('input tap 535 2200')
+device.shell('input tap 835 2200')
+device.shell('input swipe 500 1500 500 250')
+
+# Abrindo novamente
+device.shell('input swipe 500 1500 500 250')
+device.shell('input tap 930 1370')
+
+sleep(4)
 
 async def fill_phone_number():  # Função para preencher o número de telefone no Telegram no terminal e salvar a seção
     client = TelegramClient(f'sessions/{phone}', api_id, api_hash,
