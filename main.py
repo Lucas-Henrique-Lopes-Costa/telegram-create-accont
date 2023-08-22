@@ -270,6 +270,17 @@ class AccountMaker:
         balance = float(
             str(get(self.url, params=self.balance_param).text).split(":")[-1])
         try:
+            password = "arvore11_country-br"
+            response = requests.get('http://httpbin.org/ip', proxies=dict(
+                http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
+            # Verifica o resultado
+            if response.status_code == 200:
+                print("Requisição bem-sucedida!")
+                print(response.text)
+            else:
+                print(
+                    f"Erro na requisição. Código de status: {response.status_code}")
+
             self.counter = 60
             print(self.color.OKGREEN +
                   f"\nBalance : {balance}\n"+self.color.ENDC)
@@ -284,22 +295,68 @@ class AccountMaker:
                 phone = response[2]
                 id = response[1]
             else:
-                # fala o nomedo pais que não deu certo, convertendo o número para o nome do pais
+                # fala o nome do pais que não deu certo, convertendo o número para o nome do pais
                 print(
                     self.color.FAIL + f"Failed to get number in {list(countrys.keys())[list(countrys.values()).index(str(self.country))]}, changing country..."+self.color.ENDC)
-                self.country = choice(list(countrys.values()))
+                self.country = choice([32, 12, 4, 73])
+                # Faça a mudança de senha, para romenia, estados unidos, filipinas e brazil
+                if self.country == "32":
+                    password = "arvore11_country-ro"
+                    response = requests.get('http://httpbin.org/ip', proxies=dict(
+                        http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
+                    # Verifica o resultado
+                    if response.status_code == 200:
+                        print("Requisição bem-sucedida!")
+                        print(response.text)
+                    else:
+                        print(
+                            f"Erro na requisição. Código de status: {response.status_code}")
+                elif self.country == "12":
+                    password = "arvore11_country-us"
+                    response = requests.get('http://httpbin.org/ip', proxies=dict(
+                        http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
+                    # Verifica o resultado
+                    if response.status_code == 200:
+                        print("Requisição bem-sucedida!")
+                        print(response.text)
+                    else:
+                        print(
+                            f"Erro na requisição. Código de status: {response.status_code}")
+                elif self.country == "4":
+                    password = "arvore11_country-ph"
+                    response = requests.get('http://httpbin.org/ip', proxies=dict(
+                        http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
+                    # Verifica o resultado
+                    if response.status_code == 200:
+                        print("Requisição bem-sucedida!")
+                        print(response.text)
+                    else:
+                        print(
+                            f"Erro na requisição. Código de status: {response.status_code}")
+                elif self.country == "73":
+                    password = "arvore11_country-br"
+                    response = requests.get('http://httpbin.org/ip', proxies=dict(
+                        http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
+                    # Verifica o resultado
+                    if response.status_code == 200:
+                        print("Requisição bem-sucedida!")
+                        print(response.text)
+                    else:
+                        print(
+                            f"Erro na requisição. Código de status: {response.status_code}")
+
                 self.create_account()
 
             print(self.color.OKCYAN +
                   f"Number: {phone} | Number ID: {id}\n" + self.color.ENDC)
 
-            # Desistanlando Telegram X
-            print('Desinstalando Telegram X')
-            device.uninstall('org.thunderdog.challegram')
+            # # Desistanlando Telegram X
+            # print('Desinstalando Telegram X')
+            # device.uninstall('org.thunderdog.challegram')
 
-            # instalar apk de um app no celular
-            device.install('Telegram.apk')
-            print('App instalado')
+            # # instalar apk de um app no celular
+            # device.install('Telegram.apk')
+            # print('App instalado')
 
             # Preparando Ambiete
             print(self.color.OKBLUE+"Ambiente Preparado..."+self.color.ENDC)
@@ -407,7 +464,7 @@ class AccountMaker:
                     # Função para preencher o número de telefone no Telegram
                     async def fill_phone_number():
                         client = TelegramClient(
-                            f"sessions/{phone}", self.api_id, self.api_has)
+                            f"sessions/{phone}", self.api_id, self.api_has, proxies=dict(http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
                         await client.start()
 
                     # Função para colocar o número de telefone no terminal
