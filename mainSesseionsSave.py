@@ -10,6 +10,7 @@ import re
 
 api_id = 10103155
 api_hash = "13bddab82f9a0f7188686ee7b5558663"
+
 phone = input('Digite o número de telefone: ')
 phone = phone.replace('+', '')
 
@@ -31,6 +32,16 @@ device = devices[0]
 # Salvar .section
 print("Salvando Seção...")
 
+# Limpar o telegram da memória para salvar
+device.shell('input tap 535 2200')
+device.shell('input tap 835 2200')
+device.shell('input swipe 500 1500 500 250')
+
+# Abrindo novamente
+device.shell('input swipe 500 1500 500 250')
+device.shell('input tap 930 1370')
+
+sleep(4)
 
 async def fill_phone_number():  # Função para preencher o número de telefone no Telegram no terminal e salvar a seção
     client = TelegramClient(f'sessions/{phone}', api_id, api_hash,
