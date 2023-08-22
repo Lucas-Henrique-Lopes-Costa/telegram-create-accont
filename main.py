@@ -9,7 +9,7 @@ countrys = {
     "Malaysia": "7",
     "Vietnam": "10",
     "Kyrgyzstan": "11",
-    "Usa": "12 ",
+    "Usa": "12",
     "Israel": "13",
     "HongKong": "14",
     "Poland": "15",
@@ -228,7 +228,7 @@ try:
     proxy_url = 'geo.iproyal.com'
     port = '32325'
     user = 'leiroz7'
-    password = 'arvore11_country-ro'
+    password = 'arvore11_country-br'
 except NoSectionError as e:
     input(
         f'Error!!, in config file \
@@ -268,25 +268,30 @@ class AccountMaker:
 
     def create_account(self):
         balance = float(
-            str(get(self.url, params=self.balance_param).text).split(":")[-1])
+            str(get(self.url, params=self.balance_param).text).split(":")[-1])            
         try:
-            password = "arvore11_country-br"
-            response = requests.get('http://httpbin.org/ip', proxies=dict(
-                http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
-            # Verifica o resultado
-            if response.status_code == 200:
-                print("Requisição bem-sucedida!")
-                print(response.text)
-            else:
-                print(
-                    f"Erro na requisição. Código de status: {response.status_code}")
-
-            self.counter = 60
             print(self.color.OKGREEN +
                   f"\nBalance : {balance}\n"+self.color.ENDC)
 
+            self.counter = 60
+            self.country = choice([32, 12, 73])
+
+            # Faça a mudança de senha, para romenia, estados unidos, filipinas e brazil
+            password = ""
+            if self.country == 32:
+                password = "arvore11_country-ro"
+            elif self.country == 12:
+                password = "arvore11_country-us"
+            elif self.country == 4:
+                password = "arvore11_country-ph"
+            elif self.country == 73:
+                password = "arvore11_country-br"
+
             print(self.color.OKCYAN +
                   f"Country: {list(countrys.keys())[list(countrys.values()).index(str(self.country))]}"+self.color.ENDC)
+            print(self.color.OKCYAN +
+                  f"Password: {password}"+self.color.ENDC)
+
             response = str(
                 get(self.url, params=self.buy_param).text).split(":")
 
@@ -295,56 +300,8 @@ class AccountMaker:
                 phone = response[2]
                 id = response[1]
             else:
-                # fala o nome do pais que não deu certo, convertendo o número para o nome do pais
                 print(
                     self.color.FAIL + f"Failed to get number in {list(countrys.keys())[list(countrys.values()).index(str(self.country))]}, changing country..."+self.color.ENDC)
-                self.country = choice([32, 12, 4, 73])
-                # Faça a mudança de senha, para romenia, estados unidos, filipinas e brazil
-                if self.country == "32":
-                    password = "arvore11_country-ro"
-                    response = requests.get('http://httpbin.org/ip', proxies=dict(
-                        http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
-                    # Verifica o resultado
-                    if response.status_code == 200:
-                        print("Requisição bem-sucedida!")
-                        print(response.text)
-                    else:
-                        print(
-                            f"Erro na requisição. Código de status: {response.status_code}")
-                elif self.country == "12":
-                    password = "arvore11_country-us"
-                    response = requests.get('http://httpbin.org/ip', proxies=dict(
-                        http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
-                    # Verifica o resultado
-                    if response.status_code == 200:
-                        print("Requisição bem-sucedida!")
-                        print(response.text)
-                    else:
-                        print(
-                            f"Erro na requisição. Código de status: {response.status_code}")
-                elif self.country == "4":
-                    password = "arvore11_country-ph"
-                    response = requests.get('http://httpbin.org/ip', proxies=dict(
-                        http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
-                    # Verifica o resultado
-                    if response.status_code == 200:
-                        print("Requisição bem-sucedida!")
-                        print(response.text)
-                    else:
-                        print(
-                            f"Erro na requisição. Código de status: {response.status_code}")
-                elif self.country == "73":
-                    password = "arvore11_country-br"
-                    response = requests.get('http://httpbin.org/ip', proxies=dict(
-                        http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
-                    # Verifica o resultado
-                    if response.status_code == 200:
-                        print("Requisição bem-sucedida!")
-                        print(response.text)
-                    else:
-                        print(
-                            f"Erro na requisição. Código de status: {response.status_code}")
-
                 self.create_account()
 
             print(self.color.OKCYAN +
@@ -619,7 +576,7 @@ class AccountMaker:
 
                     sleep(4)
 
-                    async def fill_phone_number():  # Função para preencher o número de telefone no Telegram no terminal e salvar a seção
+                    async def fill_phone_number():  # Coloca o  no terminal e salvar a seção
                         client = TelegramClient(f'sessions/{phone}', self.api_id, self.api_hash,
                                                 proxy=("socks5", proxy_url, port, True, user, password))
                         await client.start()
