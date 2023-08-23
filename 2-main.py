@@ -265,6 +265,7 @@ class AccountMaker:
         self.balance_param = (('api_key', self.token),
                               ('action', 'getBalance'))
         self.url = 'https://sms-activate.ru/stubs/handler_api.php'
+        self.counter = 60
 
     def create_account(self):
         balance = float(
@@ -273,79 +274,78 @@ class AccountMaker:
             print(self.color.OKGREEN +
                   f"\nBalance : {balance}\n"+self.color.ENDC)
 
-            self.counter = 60
             self.country = choice([32, 12, 73])
 
             # Faça a mudança de senha, para romenia, estados unidos, filipinas e brazil
             password = ""
             if self.country == 32:
                 password = "arvore11_country-ro"
-                # Realiza a requisição HTTP utilizando o proxy
-                response = requests.get('http://httpbin.org/ip', proxies=dict(
-                    http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
+                # # Realiza a requisição HTTP utilizando o proxy
+                # response = requests.get('http://httpbin.org/ip', proxies=dict(
+                #     http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
 
-                # Verifica o resultado
-                if response.status_code == 200:
-                    print("Requisição bem-sucedida!")
-                    ip = response.json()['origin']
-                    response = requests.get(f'http://ip-api.com/json/{ip}')
-                    # com base no ip retorna a cidade e pais
-                    print(self.color.OKCYAN +
-                          f"Country: {response.json()['country']} | City: {response.json()['city']}"+self.color.ENDC)
-                else:
-                    print(
-                        f"Erro na requisição. Código de status: {response.status_code}")
+                # # Verifica o resultado
+                # if response.status_code == 200:
+                #     print("Requisição bem-sucedida!")
+                #     ip = response.json()['origin']
+                #     response = requests.get(f'http://ip-api.com/json/{ip}')
+                #     # com base no ip retorna a cidade e pais
+                #     print(self.color.OKCYAN +
+                #           f"Country: {response.json()['country']} | City: {response.json()['city']}"+self.color.ENDC)
+                # else:
+                #     print(
+                #         f"Erro na requisição. Código de status: {response.status_code}")
             elif self.country == 12:
                 password = "arvore11_country-us"
-                # Realiza a requisição HTTP utilizando o proxy
-                response = requests.get('http://httpbin.org/ip', proxies=dict(
-                    http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
+                # # Realiza a requisição HTTP utilizando o proxy
+                # response = requests.get('http://httpbin.org/ip', proxies=dict(
+                #     http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
 
-                # Verifica o resultado
-                if response.status_code == 200:
-                    print("Requisição bem-sucedida!")
-                    ip = response.json()['origin']
-                    response = requests.get(f'http://ip-api.com/json/{ip}')
-                    # com base no ip retorna a cidade e pais
-                    print(self.color.OKCYAN +
-                          f"Country: {response.json()['country']} | City: {response.json()['city']}"+self.color.ENDC)
-                else:
-                    print(
-                        f"Erro na requisição. Código de status: {response.status_code}")
+                # # Verifica o resultado
+                # if response.status_code == 200:
+                #     print("Requisição bem-sucedida!")
+                #     ip = response.json()['origin']
+                #     response = requests.get(f'http://ip-api.com/json/{ip}')
+                #     # com base no ip retorna a cidade e pais
+                #     print(self.color.OKCYAN +
+                #           f"Country: {response.json()['country']} | City: {response.json()['city']}"+self.color.ENDC)
+                # else:
+                #     print(
+                #         f"Erro na requisição. Código de status: {response.status_code}")
             elif self.country == 4:
                 password = "arvore11_country-ph"
-                # Realiza a requisição HTTP utilizando o proxy
-                response = requests.get('http://httpbin.org/ip', proxies=dict(
-                    http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
+                # # Realiza a requisição HTTP utilizando o proxy
+                # response = requests.get('http://httpbin.org/ip', proxies=dict(
+                #     http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
 
-                # Verifica o resultado
-                if response.status_code == 200:
-                    print("Requisição bem-sucedida!")
-                    ip = response.json()['origin']
-                    response = requests.get(f'http://ip-api.com/json/{ip}')
-                    # com base no ip retorna a cidade e pais
-                    print(self.color.OKCYAN +
-                          f"Country: {response.json()['country']} | City: {response.json()['city']}"+self.color.ENDC)
-                else:
-                    print(
-                        f"Erro na requisição. Código de status: {response.status_code}")
+                # # Verifica o resultado
+                # if response.status_code == 200:
+                #     print("Requisição bem-sucedida!")
+                #     ip = response.json()['origin']
+                #     response = requests.get(f'http://ip-api.com/json/{ip}')
+                #     # com base no ip retorna a cidade e pais
+                #     print(self.color.OKCYAN +
+                #           f"Country: {response.json()['country']} | City: {response.json()['city']}"+self.color.ENDC)
+                # else:
+                #     print(
+                #         f"Erro na requisição. Código de status: {response.status_code}")
             elif self.country == 73:
                 password = "arvore11_country-br"
-                # Realiza a requisição HTTP utilizando o proxy
-                response = requests.get('http://httpbin.org/ip', proxies=dict(
-                    http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
+                # # Realiza a requisição HTTP utilizando o proxy
+                # response = requests.get('http://httpbin.org/ip', proxies=dict(
+                #     http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
 
-                # Verifica o resultado
-                if response.status_code == 200:
-                    print("Requisição bem-sucedida!")
-                    ip = response.json()['origin']
-                    response = requests.get(f'http://ip-api.com/json/{ip}')
-                    # com base no ip retorna a cidade e pais
-                    print(self.color.OKCYAN +
-                          f"Country: {response.json()['country']} | City: {response.json()['city']}"+self.color.ENDC)
-                else:
-                    print(
-                        f"Erro na requisição. Código de status: {response.status_code}")
+                # # Verifica o resultado
+                # if response.status_code == 200:
+                #     print("Requisição bem-sucedida!")
+                #     ip = response.json()['origin']
+                #     response = requests.get(f'http://ip-api.com/json/{ip}')
+                #     # com base no ip retorna a cidade e pais
+                #     print(self.color.OKCYAN +
+                #           f"Country: {response.json()['country']} | City: {response.json()['city']}"+self.color.ENDC)
+                # else:
+                #     print(
+                #         f"Erro na requisição. Código de status: {response.status_code}")
 
             print(self.color.OKCYAN +
                   f"Password: {password}"+self.color.ENDC)
