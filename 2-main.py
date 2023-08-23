@@ -281,7 +281,8 @@ class AccountMaker:
             if self.country == 32:
                 password = "arvore11_country-ro"
                 # Realiza a requisição HTTP utilizando o proxy
-                response = requests.get('http://httpbin.org/ip', proxies=dict(http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
+                response = requests.get('http://httpbin.org/ip', proxies=dict(
+                    http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
 
                 # Verifica o resultado
                 if response.status_code == 200:
@@ -292,11 +293,13 @@ class AccountMaker:
                     print(self.color.OKCYAN +
                           f"Country: {response.json()['country']} | City: {response.json()['city']}"+self.color.ENDC)
                 else:
-                    print(f"Erro na requisição. Código de status: {response.status_code}")
+                    print(
+                        f"Erro na requisição. Código de status: {response.status_code}")
             elif self.country == 12:
                 password = "arvore11_country-us"
                 # Realiza a requisição HTTP utilizando o proxy
-                response = requests.get('http://httpbin.org/ip', proxies=dict(http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
+                response = requests.get('http://httpbin.org/ip', proxies=dict(
+                    http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
 
                 # Verifica o resultado
                 if response.status_code == 200:
@@ -307,11 +310,13 @@ class AccountMaker:
                     print(self.color.OKCYAN +
                           f"Country: {response.json()['country']} | City: {response.json()['city']}"+self.color.ENDC)
                 else:
-                    print(f"Erro na requisição. Código de status: {response.status_code}")
+                    print(
+                        f"Erro na requisição. Código de status: {response.status_code}")
             elif self.country == 4:
                 password = "arvore11_country-ph"
                 # Realiza a requisição HTTP utilizando o proxy
-                response = requests.get('http://httpbin.org/ip', proxies=dict(http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
+                response = requests.get('http://httpbin.org/ip', proxies=dict(
+                    http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
 
                 # Verifica o resultado
                 if response.status_code == 200:
@@ -322,11 +327,13 @@ class AccountMaker:
                     print(self.color.OKCYAN +
                           f"Country: {response.json()['country']} | City: {response.json()['city']}"+self.color.ENDC)
                 else:
-                    print(f"Erro na requisição. Código de status: {response.status_code}")
+                    print(
+                        f"Erro na requisição. Código de status: {response.status_code}")
             elif self.country == 73:
                 password = "arvore11_country-br"
                 # Realiza a requisição HTTP utilizando o proxy
-                response = requests.get('http://httpbin.org/ip', proxies=dict(http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
+                response = requests.get('http://httpbin.org/ip', proxies=dict(
+                    http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
 
                 # Verifica o resultado
                 if response.status_code == 200:
@@ -337,7 +344,8 @@ class AccountMaker:
                     print(self.color.OKCYAN +
                           f"Country: {response.json()['country']} | City: {response.json()['city']}"+self.color.ENDC)
                 else:
-                    print(f"Erro na requisição. Código de status: {response.status_code}")
+                    print(
+                        f"Erro na requisição. Código de status: {response.status_code}")
 
             print(self.color.OKCYAN +
                   f"Password: {password}"+self.color.ENDC)
