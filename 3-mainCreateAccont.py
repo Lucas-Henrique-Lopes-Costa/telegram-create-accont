@@ -5,6 +5,7 @@ from time import sleep
 from json import load, dump
 import clipboard
 import pyautogui
+import requests
 import asyncio
 import re
 
@@ -15,7 +16,23 @@ api_hash = "13bddab82f9a0f7188686ee7b5558663"
 proxy_url = 'geo.iproyal.com'
 port = '32325'
 user = 'leiroz7'
-password = 'arvore11_country-ph'
+password = 'arvore11_country-us'
+
+# # Realiza a requisição HTTP utilizando o proxy
+# response = requests.get('http://httpbin.org/ip', proxies=dict(
+#     http=f'socks5://{user}:{password}@{proxy_url}:{port}', https=f'socks5://{user}:{password}@{proxy_url}:{port}'))
+
+# # Verifica o resultado
+# if response.status_code == 200:
+#     print("Requisição bem-sucedida!")
+#     ip = response.json()['origin']
+#     response = requests.get(f'http://ip-api.com/json/{ip}')
+#     # com base no ip retorna a cidade e pais
+#     print(
+#         f"Country: {response.json()['country']} | City: {response.json()['city']}")
+# else:
+#     print(
+#         f"Erro na requisição. Código de status: {response.status_code}")
 
 adb = Client(host='127.0.0.1', port=5037)
 devices = adb.devices()
@@ -28,6 +45,14 @@ device = devices[0]
 
 phone = input('Digite o número de telefone: ')
 phone = phone.replace('+', '')
+
+# Desistanlando Telegram X
+print('Desinstalando Telegram X')
+device.uninstall('org.thunderdog.challegram')
+
+# instalar apk de um app no celular
+device.install('Telegram.apk')
+print('App instalado')
 
 # Preparando Ambiete
 print("Ambiente Preparado...")
@@ -84,79 +109,13 @@ sleep(2)
 
 # Aceita os termos
 print("Aceita os termos...")
-device.shell('input tap 870 1695')
+device.shell('input tap 884 1570')
 sleep(2)
 
 # Find Contancts
 print("Negando...")
-device.shell('input tap 634 1318')
+device.shell('input tap 683 1318')
 sleep(2)
-
-# Escolhe uma foto aleatória da pasta fotos
-with open("data/photos.txt") as f:
-    photos = str(f.read()).split("\n")
-photo = choice(photos)
-print(photo)
-device.push(f"photos/{photo}", f"/sdcard/Pictures/{photo}")
-print("Foto enviada!")
-
-# Mover para a galeria
-print("Open gallery")
-device.shell('input tap 520 2200')
-device.shell('input tap 130 1500')
-sleep(4)
-
-# dar acesso a galeria
-print("Give access to gallery")
-device.shell(
-    'pm grant org.thunderdog.challegram android.permission.READ_CONTACTS')
-device.shell(
-    'pm grant org.thunderdog.challegram android.permission.READ_EXTERNAL_STORAGE')
-device.shell(
-    'pm grant org.thunderdog.challegram android.permission.WRITE_EXTERNAL_STORAGE')
-device.shell(
-    'pm grant org.thunderdog.challegram android.permission.CAMERA')
-device.shell(
-    'pm grant org.thunderdog.challegram android.permission.RECORD_AUDIO')
-device.shell(
-    'pm grant org.thunderdog.challegram android.permission.ACCESS_FINE_LOCATION')
-device.shell(
-    'pm grant org.thunderdog.challegram android.permission.ACCESS_COARSE_LOCATION')
-device.shell(
-    'pm grant org.thunderdog.challegram android.permission.ACCESS_BACKGROUND_LOCATION')
-
-print("Open folder root")
-device.shell('input tap 95 250')
-sleep(2)
-device.shell('input tap 290 1350')
-
-print("Open Folder")
-device.shell('input tap 140 540')
-sleep(2)
-
-print("Open photo")
-device.shell('input keyevent 62')
-device.shell('input keyevent 66')
-
-print("Move to gallery")
-device.shell('input tap 286 2035')
-sleep(2)
-device.shell('input tap 140 690')
-sleep(2)
-device.shell('input tap 400 1270')
-sleep(3)
-device.shell('input tap 530 2080')
-sleep(4)
-device.shell('input tap 600 1580')
-sleep(2)
-
-device.shell('input tap 995 70')
-sleep(2)
-device.shell('input tap 995 70')
-sleep(2)
-device.shell('input tap 60 60')
-sleep(2)
-device.shell('input tap 55 240')
 
 print("Set accont...")
 device.shell('input tap 66 240')
@@ -166,7 +125,7 @@ device.shell('input tap 270 940')
 print("Set photo...")
 device.shell('input tap 470 588')
 sleep(2)
-device.shell('input tap 250 1900')
+device.shell('input tap 250 2000')
 sleep(2)
 device.shell('input tap 500 580')
 sleep(2)
@@ -185,8 +144,7 @@ print("Select user...")
 with open("data/names.txt") as f:
     names = str(f.read()).split("\n")
 name = choice(names)
-username = name + ''.join5511918649652
-(choice('0123456789') for i in range(10))
+username = name + ''.join(choice('0123456789') for i in range(10))
 
 device.shell(f'input text {username}')
 
@@ -246,6 +204,7 @@ print("Salvando Seção...")
 device.shell('input tap 535 2200')
 device.shell('input tap 835 2200')
 device.shell('input swipe 500 1500 500 250')
+device.shell('input tap 535 2200')
 
 # Abrindo novamente
 device.shell('input swipe 500 1500 500 250')

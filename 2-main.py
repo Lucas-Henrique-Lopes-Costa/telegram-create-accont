@@ -365,16 +365,16 @@ class AccountMaker:
             print(self.color.OKCYAN +
                   f"Number: {phone} | Number ID: {id}\n" + self.color.ENDC)
 
-            # Desistanlando Telegram X
-            print('Desinstalando Telegram X')
-            device.uninstall('org.thunderdog.challegram')
+            # # Desistanlando Telegram X
+            # print('Desinstalando Telegram X')
+            # device.uninstall('org.thunderdog.challegram')
 
-            # instalar apk de um app no celular
-            device.install('Telegram.apk')
-            print('App instalado')
+            # # instalar apk de um app no celular
+            # device.install('Telegram.apk')
+            # print('App instalado')
 
-            # Preparando Ambiete
-            print(self.color.OKBLUE+"Ambiente Preparado..."+self.color.ENDC)
+            # # Preparando Ambiete
+            # print(self.color.OKBLUE+"Ambiente Preparado..."+self.color.ENDC)
 
             # Abrir o app
             print(self.color.OKBLUE+"Abrindo Telegram..."+self.color.ENDC)
@@ -566,8 +566,7 @@ class AccountMaker:
                     with open("data/names.txt") as f:
                         names = str(f.read()).split("\n")
                     name = choice(names)
-                    username = name + ''.join5511918649652
-                    (choice('0123456789') for i in range(10))
+                    username = name + ''.join(choice('0123456789') for i in range(10))
 
                     device.shell(f'input text {username}')
 
@@ -718,7 +717,7 @@ class AccountMaker:
                     input(e.__class__.__name__)
             else:
                 sleep(5)
-                self.counter -= 5
+                self.counter -= 1
                 continue
 
     def cancel_order(self, id, phone, ban=False, flood=False):

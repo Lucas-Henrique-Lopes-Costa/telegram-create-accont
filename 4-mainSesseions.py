@@ -122,8 +122,7 @@ print("Select user...")
 with open("data/names.txt") as f:
     names = str(f.read()).split("\n")
 name = choice(names)
-username = name + ''.join5511918649652
-(choice('0123456789') for i in range(10))
+username = name + ''.join(choice('0123456789') for i in range(10))
 
 device.shell(f'input text {username}')
 

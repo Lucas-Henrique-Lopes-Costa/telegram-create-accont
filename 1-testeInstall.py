@@ -14,7 +14,7 @@ print('Desinstalando Telegram X')
 device.uninstall('org.thunderdog.challegram')
 
 # instalar apk de um app no celular
-device.install('3.apk')
+device.install('Telegram.apk')
 print('App instalado')
 
 # abrir app

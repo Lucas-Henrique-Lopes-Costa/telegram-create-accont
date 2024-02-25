@@ -10,4 +10,4 @@ E faz a criação de contas em paralelo, para agilizar o processo. Usando a bibl
 `pip install -r requirements.txt`
 
 No canal de Telegram X, baixe sempre a versão:
-`Telegram-X-0.25.10.1649-x86`
+`Telegram-X-...x86`
